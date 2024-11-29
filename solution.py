@@ -35,17 +35,30 @@ def merge(left, right):
 def process_intervals(n, k, intervals):
     """Procesa los intervalos y determina si es posible cocinar la hamburguesa correctamente."""
     intervals = merge_sort(intervals)  # Ordena los intervalos por el tiempo de inicio.
-    flips = 0  # Contador de volteos.
+    flips = 0
     current_time = 0  # Tiempo cocinado en un lado.
+    total_cooking_time = 0  # Tiempo total cocinado en ambos lados.
 
     for (li, ri) in intervals:
-        if li <= current_time < ri:  # Verifica si el tiempo actual está dentro del intervalo.
-            flips += 1  # Incrementa el contador de volteos.
-            current_time += n  # Agrega tiempo n después de voltear.
-        if current_time >= 2 * n:  # Verifica si la hamburguesa está perfectamente cocinada.
-            return f"Perfect burger!\n{flips}"  # Devuelve el mensaje de éxito.
-    
-    # Devuelve mensaje de fallo si no se alcanzó el tiempo necesario.
+        # Si el intervalo se solapa con el tiempo actual de cocción, sumar el tiempo.
+        if li < current_time:
+            # Si hay solapamiento, solo contamos el tiempo adicional en este intervalo.
+            total_cooking_time += ri - current_time
+        elif li >= current_time:
+            # Si no hay solapamiento, simplemente cocinamos desde el inicio del intervalo.
+            total_cooking_time += ri - li
+        
+        # Cada vez que el tiempo de cocción acumulado alcanza el tiempo necesario por lado, lo registramos.
+        if total_cooking_time >= 2 * n:
+            flips += 1
+            current_time += n  # Volteamos la hamburguesa, y sumamos el tiempo n a la cocción total.
+            total_cooking_time = 0  # Reiniciamos el tiempo de cocción para el siguiente lado.
+
+        # Si ya se ha cocinado completamente (2 * n tiempo), salimos y mostramos el resultado.
+        if current_time >= 2 * n:
+            return f"Perfect burger!\n{flips}"
+
+    # Si no se alcanzó el tiempo necesario de cocción, la hamburguesa no está perfecta.
     return "Another bland and poorly cooked burger!" if current_time < 2 * n else None
 
 def main():
