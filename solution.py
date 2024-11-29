@@ -1,3 +1,8 @@
+# JUAN CAMILO SILVA - 2122913
+# LESLI ESMITH MARTINEZ - 2126928
+# JOSE ANTONIO TUMIÑA - 2077419
+
+
 def merge_sort(arr):
     """Función que implementa Merge Sort."""
     if len(arr) <= 1:
